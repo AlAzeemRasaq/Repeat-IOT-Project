@@ -1,0 +1,17 @@
+# general
+sudo apt update
+sudo apt install python3-rpi.gpio
+python3 --version
+python3 -m pip --version
+python3 -m pip install RPi.GPIO
+
+# install flask and pubnub
+pip3 install flask --break-system-packages
+pip3 install pubnub --break-system-packages
+pip3 install flask pubnub --break-system-packages
+
+# security
+pip3 install flask-httpauth
+
+# database
+pip3 install flask_sqlalchemy

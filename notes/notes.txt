@@ -1,0 +1,58 @@
+GPIO 6 is the ground pin.
+I'll be using GPIO 8, 10 and 12 for the connections to the red, yellow and green LED's, respectively.
+Using 220 Ohm resistors.
+
+Items: Raspberry Pi 400, Breadboard, red yellow green LED's, 220 Ohm resistors, Male-to-female jumper wires.
+
+Transferred python code to my Google Keep, which I used in my Pi, which I copypasted into my terminal.
+Used PubNub to facilitate control from my laptop to the Pi.
+Created a templates directory where i put index.html
+
+http link:
+pi: http://127.0.1.1:5000
+laptop: http://192.168.1.10:5000
+
+aws public ipv4 address: 54.246.150.46
+
+was gonna use (chmod 400 "C:\Users\alaze\Downloads\Repeat Projects\IOT Development\RepeatProject\.ssh\repeat_key_pair_3.pem")
+
+terminal notes:
+cd C:\Users\alaze\Downloads\Repeat Projects\IOT Development\RepeatProject\.ssh
+scp -i repeat_key_pair_3.pem "..\pi code\web_controller.py" ubuntu@54.246.150.46:/home/ubuntu/
+
+--- first time only ---
+sudo apt update
+sudo apt install python3-pip nginx
+pip3 install flask pubnub gunicorn
+
+--- continue ---
+ssh -i repeat_key_pair_3.pem ubuntu@54.246.150.46
+gunicorn -w 1 web_controller:app --bind 127.0.1.1:5000 --daemon
+ps aux | grep gunicorn
+sudo nano /etc/nginx/sites-available/trafficlight
+
+--- trafficlight ---
+server {
+    listen 80;
+    server_name 54.246.150.46;
+
+    location / {
+        proxy_pass http://127.0.1.1:5000;
+        include proxy_params;
+    }
+}
+--------------------
+sudo ln -s /etc/nginx/sites-available/trafficlight /etc/nginx/sites-enabled
+sudo nginx -t
+sudo systemctl reload nginx
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d 54.246.150.46
+
+-- extra notes --
+
+my pi 400 has a local ip from my router, which works for devices on the same network.
+when i run flask with host='0.0.0.0', it makes the site reachable through my local ip and port 5000.
+i can only use my public ip for outside access if i set up port forwarding on my router.
+unfortunately i can't secure my app since i don't know how to + it's complicated.
+
+access it here: http://54.246.150.46

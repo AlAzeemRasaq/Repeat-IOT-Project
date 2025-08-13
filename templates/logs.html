@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Traffic Light Logs</title>
+</head>
+<body>
+    <h2>Recent Light Logs</h2>
+    <table border="1">
+        <tr><th>Time</th><th>Color</th></tr>
+        {% for log in entries %}
+            <tr>
+                <td>{{ log.timestamp }}</td>
+                <td>{{ log.color }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/">Back to Control Panel</a>
+</body>
+</html>
